@@ -6,7 +6,10 @@ language:
   javascript
 
 node_js:
-  - 6
+  - node
+
+install:
+  - npm install
 
 script:
   - npm run test
