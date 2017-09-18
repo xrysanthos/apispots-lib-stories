@@ -1,23 +1,21 @@
-sudo:
-  false
-
-language:
-  node_js
-  javascript
-
+sudo: false
+language: node_js javascript
 node_js:
-  - node
-
+- node
 install:
-  - npm install
-
+- npm install
 script:
-  - npm run test
-
+- npm run test
 deploy:
   provider: npm
   email: apispots@gmail.com
-  skip_cleanup: true
+  api_key:
+    secure: ftvDOq3+c+oiHbQuj/ZnGEqiY/LSdoVvswrp76a6hGhyG79ysDihAtkKuAOe2k0sV5JyGkgJ+7xpKqYvnufsVV21RWwG+V2qmbcpokQc50VTQFjfla4AwhZk6JFett4PppRJbiAttIYLUiEixQRAoYKeQRrWhGQUCeo9u1WpWcDhD2Au9Ng+KrQJJlrhOp9tQWkUc9GN/pmypqJMuQ+6pExsZmCcjIo+8mgxTRNpb5W0a4Cbrls7L8RLvVySJqkTMTs9p081hv4J59EADIo0hWFCaoMZrjXI/TXrVPzynHtrdfgnry6aYwirdJytJmF5U2/5DfpYyRMBvtHTn1WQEndWt0FHJFBmjBB0Av/NEU5+VhDDLAHH1BPx3RBDY6uP+yJinVDKBdXs+MkWJP6LsZJTU0I7zznORidgvN5ZlaSpv5/Bnd9WEIFERNTkLan7lalU+K+aLQmCYzUzD4iSRIZuoQHWa++UIAwYj/b0ZYdcFVXMSSIhGv0GYXpXRMtlUn58j1Tq16hqMACZ8bv/2PvzGWjFgE6+Mq/6rYJl9Vg9Gyn0tDW4lPmIgleKPENvdmmLTvV+pW/+EOeF3DQLZZVDmL/EYqE5B3hIWia8Qp/nHftwxCxA4nN44bkiYM4oKv8DW7P21ldFo8NgTVi/jbavgxT8uLkIBEi5xk0MS0s=
   on:
-    tags: next
     branch: master
+    tags: next
+    repo: apispots/apispots-lib-stories
+notifications:
+  email:
+    recipients:
+    - apispots@gmail.com
