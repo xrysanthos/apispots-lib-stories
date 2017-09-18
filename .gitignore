@@ -32,3 +32,4 @@ node_modules
 extension/dist/*
 
 /dist/*
+/lib/*

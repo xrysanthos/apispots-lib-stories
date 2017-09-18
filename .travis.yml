@@ -5,17 +5,16 @@ node_js:
 install:
 - npm install
 script:
-- npm run test
+- npm run release
 deploy:
-  - provider: releases
-    skip_cleanup: true
-    api_key:
-      secure: kB7v545Ih8ry/2XwHx2eiCzGtK0ehu2VD4u6G1Cugibepx+tWvhDdJ137GKFvJYMENENi/CWkNuXu0E48wpCGR1fS+SwvpiUAiv/8CY2NfYIg8DyeKTHO2YzFO198UJIugJdHgrHVyuLJYXY3BwplGGXhCJ8FXWWlcTQa4LsMHKuDVnArx0HB5mrG3ALK++5zrFfoqXVtDYFNuT/TMCR0utB7Ekewcb1YgQ3UyDxCnwnDflN8iTYN7f8tT83vkaWUY8xQ3HqPg7/vLLv+JdNZyWhlCqaDy4SXGLiBo0WpiECLb12ElLC2H0RVV9HDnIba298xsYABl/YEbDxQagQ3ppxeDkVRjshu8ovvIC9nukcYSf63OWNOmpjB6TiwI59MHLWg/kmqkLvSC7xfqshNkntzcnp2UzozfMs3svQlPe8h39lxkhply1VcIcOeJhjb1H4+/qgGtZGczysd7Zi2Z+SpKdoU7cyd5xlWjiINYSTY7mTwZakifqipKI7DcgFtCMvHJei51Jci7MHuut1aMTChgZQc9+W5EpLZpc6aZnrkDmvEXg32ca0BTLlOhS8pVY+dbW6QCtYuEixX7SRdXnQKwJCsKDuqQfvaPHnsGsa9iCn4TdLIdPpMnUXGBpGMsFUctWXkFGQSf+VNGjUu0X28lg68LItMD006eeokkc=
+  skip_cleanup: true
+  - provider: npm
+    email: apispots@gmail.com
+    api_key: $NPM_API_KEY
     on:
       branch: master
-    tags: next
+    tags: true
     repo: apispots/apispots-lib-stories
-
 
 notifications:
   email:

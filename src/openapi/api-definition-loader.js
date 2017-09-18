@@ -5,7 +5,6 @@
  */
 import Swagger from 'swagger-client';
 import _ from 'lodash';
-import asyncWaterfall from 'async/waterfall';
 import jsyaml from 'js-yaml';
 
 import SwaggerApiDefinition from './api-definition-swagger';

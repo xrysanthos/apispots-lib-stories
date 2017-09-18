@@ -3,7 +3,6 @@
  *
  * @author Chris Spiliotopoulos
  */
-import _ from 'lodash';
 
 
 export default (function() {
@@ -19,6 +18,8 @@ export default (function() {
    * @return {[type]}         [description]
    */
   const _getCredentials = function(specUrl, name) {
+
+    console.log(specUrl, name);
 
     return new Promise((resolve) => {
 
