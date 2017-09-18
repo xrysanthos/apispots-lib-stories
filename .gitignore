@@ -29,7 +29,6 @@ node_modules
 /.project
 /.project~
 
-package-lock.json
 extension/dist/*
 
 /dist/*
