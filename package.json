@@ -1,0 +1,74 @@
+{
+  "name": "apispots-lib-stories",
+  "version": "0.0.1",
+  "description": "API Spots - Shared data stories library",
+  "author": "Chris Spiliotopoulos",
+  "contributors": [
+    {
+      "name": "Chris Spiliotopoulos",
+      "email": "apispots@gmail.com"
+    }
+  ],
+  "repository": {
+    "type": "",
+    "url": ""
+  },
+  "bugs": {
+    "url": "https://github.com/apispots/apispots-lib-stories"
+  },
+  "keywords": [
+    "APIs",
+    "OpenAPI",
+    "Swagger",
+    "data stories",
+    "automation"
+  ],
+  "private": false,
+  "analyze": true,
+  "license": "MIT",
+  "dependencies": {
+    "async": "^2.5.0",
+    "axios": "^0.16.2",
+    "event-emitter-es6": "^1.1.5",
+    "js-yaml": "^3.10.0",
+    "json2csv": "^3.11.2",
+    "lodash": "^4.17.4",
+    "moment": "^2.18.1",
+    "shortid": "^2.2.8",
+    "swagger-client": "^3.1.1"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-core": "^6.26.0",
+    "babel-loader": "^7.1.2",
+    "babel-preset-es2015": "^6.24.1",
+    "babel-preset-stage-2": "^6.24.1",
+    "babel-register": "^6.26.0",
+    "chai": "^4.1.1",
+    "chai-as-promised": "^7.1.1",
+    "compromise": "^10.7.1",
+    "eslint": "^4.7.0",
+    "eslint-config-airbnb": "^15.1.0",
+    "eslint-plugin-import": "^2.7.0",
+    "eslint-plugin-jsx-a11y": "^6.0.2",
+    "eslint-plugin-react": "^7.2.1",
+    "mocha": "^3.5.3",
+    "sinon": "^3.2.1",
+    "sinon-chai": "^2.13.0",
+    "uglifyjs-webpack-plugin": "^1.0.0-beta.2",
+    "webpack": "^3.6.0",
+    "webpack-cleanup-plugin": "^0.5.1",
+    "webpack-dev-server": "^2.8.2",
+    "webpack-encoding-plugin": "^0.2.1",
+    "webpack-merge": "^4.1.0"
+  },
+  "scripts": {
+    "build": "npm run build:lib && npm run build:dist && npm run build:dist-min",
+    "build:lib": "babel src --out-dir lib --copy-files",
+    "build:dist": "webpack --progress --hide-modules",
+    "build:dist-min": "NODE_ENV=production webpack --progress --hide-modules",
+    "prepublish": "npm run build",
+    "prepush": "npm run test",
+    "test": "node_modules/mocha/bin/mocha --recursive --require babel-register --reporter progress test/"
+  }
+}

@@ -1,0 +1,20 @@
+sudo:
+  false
+
+language:
+  node_js
+  javascript
+
+node_js:
+  - 6
+
+script:
+  - npm run test
+
+deploy:
+  provider: npm
+  email: apispots@gmail.com
+  skip_cleanup: true
+  on:
+    tags: next
+    branch: master
