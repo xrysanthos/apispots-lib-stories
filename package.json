@@ -1,6 +1,6 @@
 {
   "name": "apispots-lib-stories",
-  "version": "0.0.1",
+  "version": "1.0.0-alpha.1",
   "description": "API Spots - Shared data stories library for interacting with Open APIs",
   "homepage": "https://apispots.github.io",
   "keywords": [
@@ -32,7 +32,7 @@
     "build:dist-min": "NODE_ENV=production webpack --progress --hide-modules",
     "build": "npm run build:lib && npm run build:dist && npm run build:dist-min",
     "lint": "eslint src test",
-    "release": "npm run build && npm run test && standard-version",
+    "release": "npm run test && standard-version",
     "prepush": "npm run test",
     "prepublish": "npm run build",
     "pretest": "npm run lint",
