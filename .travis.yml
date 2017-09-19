@@ -12,12 +12,12 @@ script:
 
 deploy:
   skip_cleanup: true
-  - provider: npm
-    email: apispots@gmail.com
-    api_key: $NPM_API_KEY
-    on:
-      branch: master
-      tags: true
+  provider: npm
+  email: apispots@gmail.com
+  api_key: $NPM_API_KEY
+  on:
+    branch: master
+    tags: true
 
 notifications:
   email:
