@@ -1,20 +1,23 @@
 sudo: false
 language: node_js
+
 node_js:
 - node
+
 install:
 - npm install
+
 script:
 - npm run release
+
 deploy:
+  skip_cleanup: true
   - provider: npm
     email: apispots@gmail.com
     api_key: $NPM_API_KEY
     on:
       branch: master
-    tags: true
-    skip_cleanup: true
-    repo: apispots/apispots-lib-stories
+      tags: true
 
 notifications:
   email:
