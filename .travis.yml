@@ -1,5 +1,5 @@
 sudo: false
-language: node_js javascript
+language: node_js
 node_js:
 - node
 install:
@@ -7,13 +7,13 @@ install:
 script:
 - npm run release
 deploy:
-  skip_cleanup: true
   - provider: npm
     email: apispots@gmail.com
     api_key: $NPM_API_KEY
     on:
       branch: master
     tags: true
+    skip_cleanup: true
     repo: apispots/apispots-lib-stories
 
 notifications:
