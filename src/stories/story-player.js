@@ -9,11 +9,21 @@ import asyncWaterfall from 'async/waterfall';
 import asyncMap from 'async/map';
 import Swagger from 'swagger-client';
 
-
 import ApiDefinitionLoader from '../openapi/api-definition-loader';
-import AuthenticationManager from '../openapi/authentication-manager';
+
 
 export default (function() {
+
+  let _credentialsManager = null;
+
+  /**
+   * Sets an instance of a specific
+   * credentials manager implementation.
+   * @param {[type]} manager [description]
+   */
+  const _setCredentialsManager = (manager) => {
+    _credentialsManager = manager;
+  };
 
   /**
    * Plays a story.
@@ -111,7 +121,6 @@ export default (function() {
                   .finally(() => {
                     const opId = part.operationId;
                     const output = part.output;
-
 
                     if (output.ok && (_.isEmpty(output.data)) && (!_.isEmpty(output.text))) {
                       output.data = output.text;
@@ -239,62 +248,72 @@ export default (function() {
            */
           if (!_.isEmpty(operation.security)) {
 
-            // check if credentials are provided
-            asyncMap(operation.security, (entry, done) => {
+            if (_credentialsManager) {
+              // check if credentials are provided
+              asyncMap(operation.security, (entry, done) => {
 
-              const name = _.keys(entry)[0];
+                const name = _.keys(entry)[0];
 
-              AuthenticationManager.getCredentials(specUrl, name)
-                .then(credentials => {
+                _credentialsManager.getCredentials(specUrl, name)
+                  .then(credentials => {
 
-                  if (!_.isEmpty(credentials)) {
+                    if (!_.isEmpty(credentials)) {
 
-                    // add the credentials to the settings
-                    if (credentials.type === 'basic') {
+                      // add the credentials to the settings
+                      if (credentials.type === 'basic') {
 
-                      securities[name] = {
-                        username: credentials.username,
-                        password: credentials.password
-                      };
+                        securities[name] = {
+                          username: credentials.username,
+                          password: credentials.password
+                        };
+                      }
                     }
-                  }
 
-                  done();
-                });
-            }, (e) => {
+                    done();
+                  });
+              }, (e) => {
 
-              if (e) {
-                console.error(e);
-              }
+                if (e) {
+                  console.error(e);
+                }
 
-              // all securities inspected
-              cb();
-            });
+                // all securities inspected
+                cb();
+              });
+            } else {
+              cb(new Error('Part requires authentication but no credentials manager found'));
+            }
+
           } else {
             cb();
           }
         }
 
-      ], () => {
+      ], (err) => {
 
-        Swagger({
-          spec: api.spec
-        })
-          .then(client => {
+        if (err) {
+          reject(err);
+        } else {
 
-            // set authorizations
-            client.authorizations = securities;
+          Swagger({
+            spec: api.spec
+          })
+            .then(client => {
 
-            // execute the API operation
-            // using the client interface
-            client.execute(params)
-              .then((res) => {
-                resolve(res);
-              })
-              .catch((e) => {
-                reject(e);
-              });
-          });
+              // set authorizations
+              client.authorizations = securities;
+
+              // execute the API operation
+              // using the client interface
+              client.execute(params)
+                .then((res) => {
+                  resolve(res);
+                })
+                .catch((e) => {
+                  reject(e);
+                });
+            });
+        }
       });
     });
   };
@@ -304,7 +323,8 @@ export default (function() {
     /*
      * Public
      */
-    play: _play
+    play: _play,
+    setCredentialsManager: _setCredentialsManager
   };
 
 }());
