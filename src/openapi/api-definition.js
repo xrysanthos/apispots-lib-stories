@@ -55,5 +55,93 @@ export default class ApiDefinition {
     return this._spec;
   }
 
+  /**
+   * Sets a list of allowed verbs
+   * @param  {[type]} verbs [description]
+   * @return {[type]}       [description]
+   */
+  set allowedVerbs(verbs) {
+
+    // if string convert to array
+    if (typeof verbs === 'string') {
+      verbs = [verbs];
+    }
+
+    this._allowedVerbs = verbs;
+  }
+
+  /**
+   * Retuns the list of allowed
+   * verbs.
+   * @return {[type]} [description]
+   */
+  get allowedVerbs() {
+    return this._allowedVerbs;
+  }
+
+
+  /**
+   * Methods to be implemented by subclasses
+   */
+
+  get title() {
+    throw new Error('Should be implemented by subclass');
+  }
+
+  get schemas() {
+    throw new Error('Should be implemented by subclass');
+  }
+
+  get paths() {
+    throw new Error('Should be implemented by subclass');
+  }
+
+  get operations() {
+    throw new Error('Should be implemented by subclass');
+  }
+
+  get operationsBySummary() {
+    throw new Error('Should be implemented by subclass');
+  }
+
+  get operationsByPath() {
+    throw new Error('Should be implemented by subclass');
+  }
+
+  get securities() {
+    throw new Error('Should be implemented by subclass');
+  }
+
+  get pathsGraph() {
+    throw new Error('Should be implemented by subclass');
+  }
+
+  get tags() {
+    throw new Error('Should be implemented by subclass');
+  }
+
+  getDefinition() {
+    throw new Error('Should be implemented by subclass');
+  }
+
+  getOperation() {
+    throw new Error('Should be implemented by subclass');
+  }
+
+  filterOperations() {
+    throw new Error('Should be implemented by subclass');
+  }
+
+  path() {
+    throw new Error('Should be implemented by subclass');
+  }
+
+  getOperationResponseDescription() {
+    throw new Error('Should be implemented by subclass');
+  }
+
+  getResponseSchemaDefinition() {
+    throw new Error('Should be implemented by subclass');
+  }
 
 }

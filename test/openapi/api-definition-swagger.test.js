@@ -31,13 +31,12 @@ context('Swagger API definition', () => {
     sandbox.restore();
   });
 
-  before(() => {
+  beforeEach((cb) => {
 
     const promise = ApiDefinitionLoader.load({spec});
     promise.then(api => {
       _api = api;
-
-      return Promise.resolve();
+      cb();
     });
   });
 
@@ -151,5 +150,47 @@ context('Swagger API definition', () => {
       expect(schema).to.be.empty;
     });
   });
+
+  context('tags()', () => {
+
+    it('should return the list of defined tags from all operations', () => {
+      const tags =_api.tags;
+
+      expect(tags).to.have.length(3);
+      expect(tags).to.deep.include({ name: 'pet', description: 'Everything about your Pets' });
+      expect(tags).to.deep.include({ name: 'store', description: 'Access to Petstore orders' });
+      expect(tags).to.deep.include({ name: 'user', description: 'Operations about user' });
+    });
+  });
+
+  context('filterOperations()', () => {
+    it('should filter operations by verbs', () => {
+      const ops =_api.filterOperations({verbs: 'get'});
+      expect(ops).to.have.length(8);
+    });
+
+    it('should filter operations by tag', () => {
+      const ops =_api.filterOperations({tag: 'user'});
+      expect(ops).to.have.length(8);
+    });
+
+    it('should filter operations by keywords', () => {
+      const ops =_api.filterOperations({keywords: ['pet', 'store']});
+      expect(ops).to.have.length(2);
+    });
+
+    it('should filter operations by tag and verb', () => {
+      const ops =_api.filterOperations({tag: 'user', verbs: 'get'});
+      expect(ops).to.have.length(3);
+    });
+
+    it('should filter operations with allowed only verbs', () => {
+      _api.allowedVerbs = ['get'];
+      const ops =_api.filterOperations({allowedOnly: true});
+      expect(ops).to.have.length(8);
+    });
+
+  });
+
 
 });

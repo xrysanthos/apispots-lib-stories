@@ -10,7 +10,6 @@ import GraphUtils from '../utils/utils-graph';
 
 export default class SwaggerApiDefinition extends ApiDefinition {
 
-
   /**
    * Returns the API title.
    * @return {[type]} [description]
@@ -465,5 +464,164 @@ export default class SwaggerApiDefinition extends ApiDefinition {
     return obj;
   }
 
+  /**
+   * Returns a list of all
+   * tags found within the
+   * definition.
+   * @return {[type]} [description]
+   */
+  get tags() {
+
+    let tags = [];
+
+    // get the top level tags first
+    // that are shared among operations
+    if (_.has(this.spec, 'tags')) {
+      _.each(this.spec.tags, (o) => {
+        tags.push({
+          name: o.name,
+          description: o.description
+        });
+      });
+    }
+
+    // now get all tags from
+    // operations
+    const ops = this.operations;
+
+    _.each(ops, (o) => {
+
+      _.each(o.tags, (tag) => {
+
+        // check if the tag is
+        // already included in the list
+        const matches = _.find(tags, {name: tag});
+
+        // console.log(matches);
+        // add the tag only if it
+        // doesn't exist
+        if (_.isEmpty(matches)) {
+
+          tags.push({
+            name: tag
+          });
+        }
+      });
+    });
+
+    tags = _.sortBy(tags, 'name');
+
+    return tags;
+  }
+
+  /**
+   * Returns a filtered list of
+   * operations by a list
+   * of verbs.
+   * @param  {[type]} tag [description]
+   * @return {[type]}     [description]
+   */
+  filterOperations({verbs, tag, keywords, allowedOnly=false, sortBy}={}) {
+
+    let ops = this.operations;
+
+    // allowed verbs only?
+    if (allowedOnly) {
+      if (!_.isEmpty(this._allowedVerbs)) {
+        if (_.isEmpty(verbs)) {
+          verbs = [];
+        }
+
+        // add the allowed only verbs as filter
+        verbs = verbs.concat(this._allowedVerbs);
+        verbs = _.uniq(verbs);
+      }
+    }
+
+    // filter by verbs
+    if (typeof verbs !== 'undefined') {
+
+      if (typeof verbs === 'string') {
+        verbs = [verbs];
+      }
+
+      ops = _.filter(ops, (o) => {
+
+        const matches = _.find(verbs, (v) => {
+          if (v.toLowerCase() === o.verb.toLowerCase()) {
+            return true;
+          }
+          return false;
+        });
+
+        if (matches) {
+          return true;
+        }
+        return false;
+      });
+    }
+
+    // filter by tag
+    if (typeof tag !== 'undefined') {
+      ops = _.filter(ops, (o) => {
+
+        const matches = _.find(o.tags, (t) => {
+          if (t.toLowerCase() === tag.toLowerCase()) {
+            return true;
+          }
+          return false;
+        });
+
+        if (matches) {
+          return true;
+        }
+        return false;
+      });
+    }
+
+    // filter by keywords
+    if (typeof keywords !== 'undefined') {
+
+      // if string convert to array
+      if (typeof keywords === 'string') {
+        keywords = [keywords];
+      }
+
+      ops = _.filter(ops, (o) => {
+
+        // get the summary in lower case
+        const summary = o.summary.toLowerCase();
+
+        let matches = 0;
+
+        // go through the keywords
+        _.each(keywords, (word) => {
+
+          word = word.toLowerCase().trim();
+
+          // check if the word is included in the summary
+          if (_.includes(summary, word.toLowerCase())) {
+            matches += 1;
+          }
+        });
+
+        return matches === keywords.length;
+      });
+    }
+
+    // map the result set
+    ops = _.map(ops, (o) => ({
+      id: o.operationId,
+      summary: o.summary,
+      description: o.description
+    }));
+
+    // sort by given attribute
+    if (typeof sortBy !== 'undefined') {
+      ops = _.sortBy(ops, sortBy);
+    }
+
+    return ops;
+  }
 
 }
