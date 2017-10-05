@@ -1,0 +1,7 @@
+ # Basic data story definition
+title: Create a user
+spec: http://petstore.swagger.io/v2/swagger.json
+parts:
+  - operationId: createUser
+    input:
+      payload: '{ "id": "spilio", "username": "spilio", "firstName": "chris", "lastName": "spilio", "email": "spilio@example.com", "password": "pass", "phone": "123456789", "userStatus": 1 }'

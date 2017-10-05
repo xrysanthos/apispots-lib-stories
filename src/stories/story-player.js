@@ -100,6 +100,11 @@ export default (function() {
                       text: (_.isEmpty(res.text) ? undefined : res.text)
                     };
 
+                    // check if response contains a Blob
+                    if (res.data instanceof Blob) {
+                      output.data = res.data;
+                    }
+
                     // set the part's output section
                     part.output = output;
 
@@ -113,6 +118,10 @@ export default (function() {
                       status: e.status,
                       statusText: e.message
                     };
+
+                    if (typeof e.response !== 'undefined') {
+                      output.statusText = `${output.statusText} [${e.response.text}]`;
+                    }
 
                     // set the part's output section
                     part.output = output;
@@ -134,10 +143,6 @@ export default (function() {
                     if (!_.isEmpty(statusText)) {
                       output.statusText = statusText;
                     }
-
-                    // check if the response has a
-                    // schema defined
-                    // const schema = api.getResponseSchemaDefinition(opId, output.status);
 
                   });
 
@@ -204,17 +209,31 @@ export default (function() {
       const specUrl = api.specUrl;
       const securities = {};
       const params = {
-        operationId: opId,
-        parameters: part.input.parameters
+        operationId: opId
       };
 
-      // set the default request content type
-      if (_.isEmpty(operation.consumes)) {
-        // if no 'consumes' section is defined,
-        // use 'application/json' as the default
-        params.requestContentType = 'application/json';
-      } else if (operation.consumes.length === 1) {
-        params.requestContentType = operation.consumes[0];
+      // set payload
+      if (!_.isEmpty(part.input.parameters)) {
+        // if the input has a 'parameters' section,
+        // use this as the payload
+        params.parameters = part.input.parameters;
+      }
+
+      // set the content type of the request
+      if (_.isEmpty(part.input.contentType)) {
+
+        // if there is no explicitly set
+        // content type, try to use a default
+        if (_.isEmpty(operation.consumes)) {
+          // if no 'consumes' section is defined,
+          // use 'application/json' as the default
+          params.requestContentType = 'application/json';
+        } else if (operation.consumes.length === 1) {
+          params.requestContentType = operation.consumes[0];
+        }
+      } else {
+        // use the one set on the part
+        params.requestContentType = part.input.contentType;
       }
 
       // set the default request content type

@@ -27,17 +27,18 @@ context('Story player', () => {
     sandbox.restore();
   });
 
-  let story;
-
-  beforeEach(() => {
-    const definition = fs.readFileSync(`${__dirname}/data/basic-story.yaml`, 'utf-8');
-
-    story = new DataStory({
-      definition
-    });
-  });
-
   context('play()', () => {
+
+    let story;
+
+    beforeEach(() => {
+      const definition = fs.readFileSync(`${__dirname}/data/basic-story.yaml`, 'utf-8');
+
+      story = new DataStory({
+        definition
+      });
+    });
+
     it('should be rejected if story is undefined', () => {
       const promise = StoryPlayer.play();
       return promise.should.be.rejectedWith('Invalid story instance');
@@ -49,6 +50,23 @@ context('Story player', () => {
       return promise.should.be.rejectedWith('Invalid Open API spec');
     });
 
+  });
+
+  context('Play different story types', () => {
+
+    it.only('should play a story with raw payload input', function() {
+
+      this.timeout(5000);
+
+      const definition = fs.readFileSync(`${__dirname}/data/basic-story-with-payload.yaml`, 'utf-8');
+
+      const story = new DataStory({
+        definition
+      });
+
+      const promise = StoryPlayer.play(story);
+      return promise.should.be.fulfilled;
+    });
 
   });
 
