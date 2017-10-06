@@ -6,6 +6,7 @@
  */
 
 import jsyaml from 'js-yaml';
+import _ from 'lodash';
 
 export default class DataStory {
 
@@ -102,6 +103,52 @@ export default class DataStory {
    */
   toYAML() {
     return jsyaml.safeDump(this._definition);
+  }
+
+  /**
+   * Returns the list
+   * of outputs from all
+   * story parts.
+   * @return {[type]} [description]
+   */
+  get outputs() {
+    try {
+
+      const parts = this.parts;
+
+      if (_.isEmpty(parts)) {
+        throw new Error('Story has no parts');
+      }
+
+      const outputs = _.chain(parts)
+        .map((o) => o.output)
+        .compact()
+        .value();
+
+      return outputs;
+    } catch (e) {
+      console.error(e.message);
+    }
+
+    return null;
+  }
+
+  /**
+   * Regarding of the number
+   * of parts within a story,
+   * returns the last executed
+   * output.
+   * @return {[type]} [description]
+   */
+  get output() {
+
+    const outputs = this.outputs;
+
+    if (!_.isEmpty(outputs)) {
+      return outputs[outputs.length - 1];
+    }
+
+    return null;
   }
 
 }

@@ -85,6 +85,9 @@ export default (function() {
             asyncEachSeries(valid, (part, done) => {
               try {
 
+                // mark the exec start timestamp
+                const start = new Date();
+
                 // play each part in turn
                 _playPart(part, api)
                   .then((res) => {
@@ -97,7 +100,7 @@ export default (function() {
                       statusText: res.statusText,
                       headers: res.headers,
                       data: (_.isEmpty(res.obj) ? undefined : res.obj),
-                      text: (_.isEmpty(res.text) ? undefined : res.text)
+                      text: res.text
                     };
 
                     // check if response contains a Blob
@@ -108,8 +111,6 @@ export default (function() {
                     // set the part's output section
                     part.output = output;
 
-                    // part played
-                    done();
                   })
                   .catch(e => {
 
@@ -120,16 +121,23 @@ export default (function() {
                     };
 
                     if (typeof e.response !== 'undefined') {
-                      output.statusText = `${output.statusText} [${e.response.text}]`;
+                      const res = e.response;
+                      output.data = (_.isEmpty(res.obj) ? undefined : res.obj);
+                      output.text = res.text;
+                      output.headers = res.headers;
                     }
 
                     // set the part's output section
                     part.output = output;
-                    done();
+
                   })
                   .finally(() => {
+
                     const opId = part.operationId;
                     const output = part.output;
+
+                    const end = new Date() - start;
+                    output.duration = end;
 
                     if (output.ok && (_.isEmpty(output.data)) && (!_.isEmpty(output.text))) {
                       output.data = output.text;
@@ -144,6 +152,8 @@ export default (function() {
                       output.statusText = statusText;
                     }
 
+                    // part played
+                    done();
                   });
 
               } catch (e) {

@@ -69,5 +69,13 @@ context('Data story class', () => {
     });
   });
 
+  context('outputs()', () => {
+    it.only('should return an array of all part outputs', () => {
+      const outputs = story.outputs;
+      expect(outputs).not.to.be.null;
+      expect(outputs).to.be.an('array');
+    });
+  });
+
 
 });
