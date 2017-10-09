@@ -1,6 +1,6 @@
 {
   "name": "apispots-lib-stories",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "API Spots - Shared data stories library for interacting with Open APIs",
   "homepage": "https://apispots.github.io",
   "keywords": [
